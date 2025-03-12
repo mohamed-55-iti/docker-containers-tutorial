@@ -1,0 +1,23 @@
+# Docker Basics: Run Nginx and Apache Containers
+
+This guide explains how to run Nginx and Apache containers using Docker and containerd/crictl.
+
+---
+
+## Steps
+
+### 1. Create a GitHub Account
+- Go to [GitHub](https://github.com).
+- Click "Sign up".
+- Enter your personal details.
+- Choose a username (preferably containing your name).
+- Set a secure password.
+
+### 2. Install Docker
+#### On Ubuntu/Debian:
+```bash
+sudo apt update
+sudo apt install docker.io
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+# Log out and log back in for group changes to take effect
