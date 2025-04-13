@@ -1,0 +1,9 @@
+- name: Test EC2 with Ansible
+  hosts: all
+  become: true
+  tasks:
+    - name: Create hello file
+      copy:
+        content: "Hello from Ansible!"
+        dest: /tmp/hello.txt
+
