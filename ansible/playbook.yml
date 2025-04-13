@@ -1,9 +1,13 @@
-- name: Test EC2 with Ansible
-  hosts: all
+- hosts: all
   become: true
   tasks:
-    - name: Create hello file
-      copy:
-        content: "Hello from Ansible!"
-        dest: /tmp/hello.txt
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
 
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
