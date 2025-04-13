@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    TF_VAR_aws_access_key = credentials('AWS_ACCESS_KEY')
-    TF_VAR_aws_secret_key = credentials('AWS_SECRET_KEY')
+    TF_VAR_aws_access_key = credentials('AWS_ACCESS_KEY') // تأكد من أن هذا هو الاسم الصحيح للـ credentials في Jenkins
+    TF_VAR_aws_secret_key = credentials('AWS_SECRET_KEY') // تأكد من أن هذا هو الاسم الصحيح للـ credentials في Jenkins
   }
 
   stages {
@@ -16,11 +16,10 @@ pipeline {
 
     stage('Terraform Init') {
       steps {
-        script {
-          docker.image('hashicorp/terraform:latest').inside("--entrypoint=''") {
-            dir('terraform') {
-              sh 'terraform init'
-            }
+        echo '🚀 Initializing Terraform...'
+        docker.image('hashicorp/terraform:latest').inside {
+          dir('terraform') {
+            sh 'terraform init'
           }
         }
       }
@@ -28,11 +27,10 @@ pipeline {
 
     stage('Terraform Apply') {
       steps {
-        script {
-          docker.image('hashicorp/terraform:latest').inside("--entrypoint=''") {
-            dir('terraform') {
-              sh 'terraform apply -auto-approve'
-            }
+        echo '🚀 Applying Terraform changes...'
+        docker.image('hashicorp/terraform:latest').inside {
+          dir('terraform') {
+            sh 'terraform apply -auto-approve'
           }
         }
       }
@@ -41,20 +39,22 @@ pipeline {
     stage('Wait for instance') {
       steps {
         echo '⏳ Waiting for instance to be ready...'
-        sh 'sleep 60'
+        sh 'sleep 60' // يمكنك تغيير الوقت حسب احتياجك
       }
     }
 
     stage('Run Ansible') {
       steps {
+        echo '⚙️ Running Ansible playbook...'
         dir('ansible') {
           sh '''
-            ansible-playbook -i hosts playbook.yml \
-              --private-key /root/test.pem \
-              -u ec2-user
+          ansible-playbook -i hosts playbook.yml \
+            --private-key /root/test.pem \
+            -u ec2-user
           '''
         }
       }
     }
   }
 }
+
