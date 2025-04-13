@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    TF_VAR_aws_access_key = credentials('aws-access-key')
-    TF_VAR_aws_secret_key = credentials('aws-secret-key')
+    TF_VAR_aws_access_key = credentials('AWS_ACCESS_KEY')
+    TF_VAR_aws_secret_key = credentials('AWS_SECRET_KEY')
   }
 
   stages {
@@ -17,7 +17,7 @@ pipeline {
     stage('Terraform Init') {
       steps {
         script {
-          docker.image('hashicorp/terraform:latest').inside {
+          docker.image('hashicorp/terraform:latest').inside("--entrypoint=''") {
             dir('terraform') {
               sh 'terraform init'
             }
@@ -29,7 +29,7 @@ pipeline {
     stage('Terraform Apply') {
       steps {
         script {
-          docker.image('hashicorp/terraform:latest').inside {
+          docker.image('hashicorp/terraform:latest').inside("--entrypoint=''") {
             dir('terraform') {
               sh 'terraform apply -auto-approve'
             }
@@ -40,6 +40,7 @@ pipeline {
 
     stage('Wait for instance') {
       steps {
+        echo '⏳ Waiting for instance to be ready...'
         sh 'sleep 60'
       }
     }
@@ -48,9 +49,9 @@ pipeline {
       steps {
         dir('ansible') {
           sh '''
-          ansible-playbook -i hosts playbook.yml \
-            --private-key /root/test.pem \
-            -u ec2-user
+            ansible-playbook -i hosts playbook.yml \
+              --private-key /root/test.pem \
+              -u ec2-user
           '''
         }
       }
