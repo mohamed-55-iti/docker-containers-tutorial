@@ -17,4 +17,3 @@ resource "aws_instance" "example" {
     command = "echo ${self.public_ip} > ../ansible/hosts"
   }
 }
-
