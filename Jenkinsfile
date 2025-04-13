@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    TF_VAR_aws_access_key = credentials('aws-access-key')  // تعديل الاسم
-    TF_VAR_aws_secret_key = credentials('aws-secret-key')  // تعديل الاسم
+    TF_VAR_aws_access_key = credentials('aws-access-key')  // تأكد من أن اسم credential صحيح
+    TF_VAR_aws_secret_key = credentials('aws-secret-key')  // تأكد من أن اسم credential صحيح
   }
 
   stages {
@@ -17,9 +17,11 @@ pipeline {
     stage('Terraform Init') {
       steps {
         echo '🚀 Initializing Terraform...'
-        docker.image('hashicorp/terraform:latest').inside {
-          dir('terraform') {
-            sh 'terraform init'
+        script {
+          docker.image('hashicorp/terraform:latest').inside {
+            dir('terraform') {
+              sh 'terraform init'
+            }
           }
         }
       }
@@ -28,9 +30,11 @@ pipeline {
     stage('Terraform Apply') {
       steps {
         echo '🚀 Applying Terraform changes...'
-        docker.image('hashicorp/terraform:latest').inside {
-          dir('terraform') {
-            sh 'terraform apply -auto-approve'
+        script {
+          docker.image('hashicorp/terraform:latest').inside {
+            dir('terraform') {
+              sh 'terraform apply -auto-approve'
+            }
           }
         }
       }
@@ -57,4 +61,3 @@ pipeline {
     }
   }
 }
-
