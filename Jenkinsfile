@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    TF_VAR_aws_access_key = credentials('AWS_ACCESS_KEY') // تأكد من أن هذا هو الاسم الصحيح للـ credentials في Jenkins
-    TF_VAR_aws_secret_key = credentials('AWS_SECRET_KEY') // تأكد من أن هذا هو الاسم الصحيح للـ credentials في Jenkins
+    TF_VAR_aws_access_key = credentials('aws-access-key')  // تعديل الاسم
+    TF_VAR_aws_secret_key = credentials('aws-secret-key')  // تعديل الاسم
   }
 
   stages {
