@@ -16,9 +16,11 @@ pipeline {
 
     stage('Terraform Init') {
       steps {
-        docker.image('hashicorp/terraform:latest').inside {
-          dir('terraform') {
-            sh 'terraform init'
+        script {
+          docker.image('hashicorp/terraform:latest').inside {
+            dir('terraform') {
+              sh 'terraform init'
+            }
           }
         }
       }
@@ -26,15 +28,16 @@ pipeline {
 
     stage('Terraform Apply') {
       steps {
-        docker.image('hashicorp/terraform:latest').inside {
-          dir('terraform') {
-            sh 'terraform apply -auto-approve'
+        script {
+          docker.image('hashicorp/terraform:latest').inside {
+            dir('terraform') {
+              sh 'terraform apply -auto-approve'
+            }
           }
         }
       }
     }
 
-    // هنا كانت المشكلة
     stage('Wait for instance') {
       steps {
         sh 'sleep 60'
@@ -52,5 +55,5 @@ pipeline {
         }
       }
     }
-  } // هذه هي النهاية الصحيحة للـ pipeline
+  }
 }
