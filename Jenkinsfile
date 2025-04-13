@@ -33,26 +33,24 @@ pipeline {
         }
       }
     }
-  }
-}
 
-        stage('Wait for instance') {
-            steps {
-                sh 'sleep 60'
-            }
-        }
-
-        stage('Run Ansible') {
-            steps {
-                dir('ansible') {
-                    sh '''
-                    ansible-playbook -i hosts playbook.yml \
-                      --private-key /root/test.pem \
-                      -u ec2-user
-                    '''
-                }
-            }
-        }
+    // هنا كانت المشكلة
+    stage('Wait for instance') {
+      steps {
+        sh 'sleep 60'
+      }
     }
-}
 
+    stage('Run Ansible') {
+      steps {
+        dir('ansible') {
+          sh '''
+          ansible-playbook -i hosts playbook.yml \
+            --private-key /root/test.pem \
+            -u ec2-user
+          '''
+        }
+      }
+    }
+  } // هذه هي النهاية الصحيحة للـ pipeline
+}
